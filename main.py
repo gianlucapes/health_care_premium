@@ -1,5 +1,7 @@
+from app.gui import main_gui
+
 def main():
-    print("Hello from health-care-premium!")
+    main_gui()
 
 
 if __name__ == "__main__":
