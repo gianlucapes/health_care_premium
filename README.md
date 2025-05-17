@@ -1,3 +1,3 @@
-### ML-PROJECT-PREMIMUM-PREDICTION
+### ML-PROJECT-HEALTH-CARE-PREMIMUM PREDICTION
 
-Codebasics project
+Project Build For Codebasics Bootcamp
