@@ -53,6 +53,7 @@ def preprocess_input(input_dict):
     "number_of_dependants",
     "income_lakhs",
     "insurance_plan",
+    "genetical_risk",
     "normalized_risk_score",
     "gender_Male",
     "region_Northwest",
@@ -111,7 +112,7 @@ def preprocess_input(input_dict):
         elif key == "Genetical Risk":
             df['genetical_risk'] = value
 
-    # Assuming the 'normalized_risk_score' needs to be calculated based on the 'age'
+    # Calculate 'normalized_risk_score' AFTER assigning 'genetical_risk'
     df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'])
     df = handle_scaling(input_dict['Age'], df)
 
@@ -119,6 +120,11 @@ def preprocess_input(input_dict):
 
 
 
-def predict(input_data):
-    input_df=preprocess_input()
-    print(input_data)
+def predict(input_dict):
+    input_df = preprocess_input(input_dict)
+    if input_dict['Age'] <= 25:
+        prediction = model_young.predict(input_df)
+    else:
+        prediction = model_rest.predict(input_df)
+
+    return int(prediction[0])

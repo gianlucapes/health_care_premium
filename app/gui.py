@@ -7,64 +7,77 @@ from sklearn.preprocessing import LabelEncoder
 from app.front_end.prediction_helper import predict
 
 def main_gui():
-    # Sample Data (Replace with your actual trained model and data)
-    data = {
-        'age': np.random.randint(18, 65, 100),
-        'gender': np.random.choice(['Male', 'Female'], 100),
-        'bmi': np.random.uniform(18, 40, 100),
-        'children': np.random.randint(0, 5, 100),
-        'smoker': np.random.choice(['No', 'Yes'], 100),
-        'region': np.random.choice(['Northwest', 'Southeast', 'Northeast', 'Southwest'], 100),
-        'charges': np.random.uniform(1000, 50000, 100)
+    # codebasics ML course: codebasics.io, all rights reserverd
+    # Define the page layout
+    st.title('Health Insurance Cost Predictor')
+
+    categorical_options = {
+        'Gender': ['Male', 'Female'],
+        'Marital Status': ['Unmarried', 'Married'],
+        'BMI Category': ['Normal', 'Obesity', 'Overweight', 'Underweight'],
+        'Smoking Status': ['No Smoking', 'Regular', 'Occasional'],
+        'Employment Status': ['Salaried', 'Self-Employed', 'Freelancer', ''],
+        'Region': ['Northwest', 'Southeast', 'Northeast', 'Southwest'],
+        'Medical History': [
+            'No Disease', 'Diabetes', 'High blood pressure', 'Diabetes & High blood pressure',
+            'Thyroid', 'Heart disease', 'High blood pressure & Heart disease', 'Diabetes & Thyroid',
+            'Diabetes & Heart disease'
+        ],
+        'Insurance Plan': ['Bronze', 'Silver', 'Gold']
     }
-    df = pd.DataFrame(data)
 
-    # Preprocessing for the sample model
-    le = LabelEncoder()
-    df['gender_encoded'] = le.fit_transform(df['gender'])
-    df['smoker_encoded'] = le.fit_transform(df['smoker'])
-    df['region_encoded'] = le.fit_transform(df['region'])
+    # Create four rows of three columns each
+    row1 = st.columns(3)
+    row2 = st.columns(3)
+    row3 = st.columns(3)
+    row4 = st.columns(3)
 
-    X = df[['age', 'gender_encoded', 'bmi', 'children', 'smoker_encoded', 'region_encoded']]
-    y = df['charges']
+    # Assign inputs to the grid
+    with row1[0]:
+        age = st.number_input('Age', min_value=18, step=1, max_value=100)
+    with row1[1]:
+        number_of_dependants = st.number_input('Number of Dependants', min_value=0, step=1, max_value=20)
+    with row1[2]:
+        income_lakhs = st.number_input('Income in Lakhs', step=1, min_value=0, max_value=200)
 
-    model = LinearRegression()
-    model.fit(X, y)
+    with row2[0]:
+        genetical_risk = st.number_input('Genetical Risk', step=1, min_value=0, max_value=5)
+    with row2[1]:
+        insurance_plan = st.selectbox('Insurance Plan', categorical_options['Insurance Plan'])
+    with row2[2]:
+        employment_status = st.selectbox('Employment Status', categorical_options['Employment Status'])
 
-    # Streamlit Frontend
-    st.title("Health Insurance Cost Prediction")
+    with row3[0]:
+        gender = st.selectbox('Gender', categorical_options['Gender'])
+    with row3[1]:
+        marital_status = st.selectbox('Marital Status', categorical_options['Marital Status'])
+    with row3[2]:
+        bmi_category = st.selectbox('BMI Category', categorical_options['BMI Category'])
 
-    with st.container():
-        col1, col2 = st.columns(2)
-        with col1:
-            age = st.number_input("Age", min_value=18, max_value=100, value=30)
-            gender = st.selectbox("Gender", ['Male', 'Female'])
-            bmi = st.number_input("BMI", min_value=10.0, max_value=50.0, value=25.0)
-            children = st.number_input("Number of Children", min_value=0, max_value=10, value=0)
-            bmi_category = st.selectbox("BMI Category", ['Normal', 'Obesity', 'Overweight', 'Underweight'])
-            marital_status = st.selectbox("Marital Status", ['Unmarried', 'Married'])
-        with col2:
-            region = st.selectbox("Region", ['Northwest', 'Southeast', 'Northeast', 'Southwest'])
-            income_level = st.selectbox("Income Level", ['<10L', '10L - 25L', '> 40L', '25L - 40L'])
-            insurance_plan = st.selectbox("Insurance Plan", ['Bronze', 'Silver', 'Gold'])
-            medical_history = st.selectbox("Medical History", ['Diabetes', 'High blood pressure', 'No Disease',
-                                                            'Diabetes & High blood pressure', 'Thyroid', 'Heart disease',
-                                                            'High blood pressure & Heart disease', 'Diabetes & Thyroid',
-                                                            'Diabetes & Heart disease'])
-            employment_status = st.selectbox("Employment Status", ['Salaried', 'Self-Employed', 'Freelancer'])
-            smoking_status = st.selectbox("Smoking Status", ['No Smoking', 'Regular', 'Occasional', 'Does Not Smoke', 'Not Smoking',
-                                                            'Smoking=0'])
+    with row4[0]:
+        smoking_status = st.selectbox('Smoking Status', categorical_options['Smoking Status'])
+    with row4[1]:
+        region = st.selectbox('Region', categorical_options['Region'])
+    with row4[2]:
+        medical_history = st.selectbox('Medical History', categorical_options['Medical History'])
 
-    if st.button("Predict"):
-        # Prepare input data for the model
-        input_data = pd.DataFrame({
-            'age': [age],
-            'gender': [gender],
-            'bmi': [bmi],
-            'children': [children],
-            'smoker': [smoking_status in ['Regular', 'Occasional', 'Smoking=0']],
-            'region': [region],
-            # Add other features as needed based on your model
-        })
+    # Create a dictionary for input values
+    input_dict = {
+        'Age': age,
+        'Number of Dependants': number_of_dependants,
+        'Income in Lakhs': income_lakhs,
+        'Genetical Risk': genetical_risk,
+        'Insurance Plan': insurance_plan,
+        'Employment Status': employment_status,
+        'Gender': gender,
+        'Marital Status': marital_status,
+        'BMI Category': bmi_category,
+        'Smoking Status': smoking_status,
+        'Region': region,
+        'Medical History': medical_history
+    }
 
-        predict(input_data)
+    # Button to make prediction
+    if st.button('Predict'):
+        prediction = predict(input_dict)
+        st.success(f'Predicted Health Insurance Cost: {prediction}')
