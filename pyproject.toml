@@ -13,9 +13,6 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "seaborn>=0.13.2",
     "statsmodels>=0.14.4",
-<<<<<<< HEAD
-=======
     "streamlit>=1.45.1",
->>>>>>> feature/streamlit
     "xgboost>=3.0.0",
 ]
