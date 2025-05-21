@@ -71,7 +71,6 @@ def main_gui():
         'Age': age,
         'Number of Dependants': number_of_dependants,
         'Income in Lakhs': income_lakhs,
-        'Genetical Risk': genetical_risk,
         'Insurance Plan': insurance_plan,
         'Employment Status': employment_status,
         'Gender': gender,
