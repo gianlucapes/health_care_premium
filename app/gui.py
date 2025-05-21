@@ -64,9 +64,9 @@ def main_gui():
     with row4[2]:
         medical_history = st.selectbox('Medical History', categorical_options['Medical History'])
     with row5[0]:
-        medical_history = st.selectbox('Stress Level', categorical_options['Stress Level'])
+        stress_level = st.selectbox('Stress Level', categorical_options['Stress Level'])
     with row5[1]:
-        medical_history = st.selectbox('Physical Activity', categorical_options['Physical Activity'])
+        physical_activity = st.selectbox('Physical Activity', categorical_options['Physical Activity'])
 
     # Create a dictionary for input values
     input_dict = {
@@ -81,7 +81,9 @@ def main_gui():
         'BMI Category': bmi_category,
         'Smoking Status': smoking_status,
         'Region': region,
-        'Medical History': medical_history
+        'Medical History': medical_history,
+        "Stress Level" : stress_level,
+        "Physical Activity" : physical_activity
     }
 
     # Button to make prediction
