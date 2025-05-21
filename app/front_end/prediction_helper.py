@@ -1,10 +1,10 @@
 from joblib import load
 import pandas as pd
 
-model_rest=load("app/artifact/model_rest.joblib")
-model_young=load("app/artifact/model_rest.joblib")
-scaler_rest=load("app/artifact/scaler_rest.joblib")
-scaler_young=load("app/artifact/scaler_young.joblib")
+model_rest=load("app/artifacts/model_rest.joblib")
+model_young=load("app/artifacts/model_rest.joblib")
+scaler_rest=load("app/artifacts/scaler_rest.joblib")
+scaler_young=load("app/artifacts/scaler_young.joblib")
 
 def calculate_normalized_risk(medical_history):
     risk_scores = {
@@ -48,69 +48,72 @@ def handle_scaling(age, df):
 
 
 def preprocess_input(input_dict):
-    expected_columns= [
-    "age",
-    "number_of_dependants",
-    "income_lakhs",
-    "insurance_plan",
-    "genetical_risk",
-    "normalized_risk_score",
-    "gender_Male",
-    "region_Northwest",
-    "region_Southeast",
-    "region_Southwest",
-    "marital_status_Unmarried",
-    "bmi_category_Obesity",
-    "bmi_category_Overweight",
-    "bmi_category_Underweight",
-    "smoking_status_Occasional",
-    "smoking_status_Regular",
-    "employment_status_Salaried",
-    "employment_status_Self-Employed"]
+    expected_columns = [
+        "age",
+        "number_of_dependants",
+        "income_lakhs",
+        "insurance_plan",
+        "normalized_risk_score",
+        "gender_Male",
+        "region_northwest",           # MUST BE LOWERCASE
+        "region_southeast",           # MUST BE LOWERCASE
+        "region_southwest",           # MUST BE LOWERCASE
+        "marital_status_unmarried",   # MUST BE LOWERCASE
+        "bmi_category_obesity",       # MUST BE LOWERCASE
+        "bmi_category_overweight",    # MUST BE LOWERCASE
+        "bmi_category_underweight",   # MUST BE LOWERCASE
+        "smoking_status_occasional",  # MUST BE LOWERCASE
+        "smoking_status_regular",     # MUST BE LOWERCASE
+        "employment_status_salaried", # MUST BE LOWERCASE
+        "employment_status_self_employed" # MUST BE LOWERCASE
+    ]
 
     insurance_plan_encoding = {"Bronze":1,"Silver":2,"Gold":3}
     df=pd.DataFrame(0,columns=expected_columns,index=[0])
     bmi= input_dict['BMI Category']
 
+    # Populate the DataFrame based on input_dict
     for key, value in input_dict.items():
         if key == 'Gender' and value == 'Male':
             df['gender_Male'] = 1
         elif key == 'Region':
+            # Assign to lowercase columns as per model's expectation
             if value == 'Northwest':
-                df['region_Northwest'] = 1
+                df['region_northwest'] = 1
             elif value == 'Southeast':
-                df['region_Southeast'] = 1
+                df['region_southeast'] = 1
             elif value == 'Southwest':
-                df['region_Southwest'] = 1
+                df['region_southwest'] = 1
         elif key == 'Marital Status' and value == 'Unmarried':
-            df['marital_status_Unmarried'] = 1
+            df['marital_status_unmarried'] = 1
         elif key == 'BMI Category':
+            # Assign to lowercase columns
             if value == 'Obesity':
-                df['bmi_category_Obesity'] = 1
+                df['bmi_category_obesity'] = 1
             elif value == 'Overweight':
-                df['bmi_category_Overweight'] = 1
+                df['bmi_category_overweight'] = 1
             elif value == 'Underweight':
-                df['bmi_category_Underweight'] = 1
+                df['bmi_category_underweight'] = 1
         elif key == 'Smoking Status':
+            # Assign to lowercase columns
             if value == 'Occasional':
-                df['smoking_status_Occasional'] = 1
+                df['smoking_status_occasional'] = 1
             elif value == 'Regular':
-                df['smoking_status_Regular'] = 1
+                df['smoking_status_regular'] = 1
         elif key == 'Employment Status':
+            # Assign to lowercase columns
             if value == 'Salaried':
-                df['employment_status_Salaried'] = 1
+                df['employment_status_salaried'] = 1
             elif value == 'Self-Employed':
-                df['employment_status_Self-Employed'] = 1
-        elif key == 'Insurance Plan':  # Correct key usage with case sensitivity
+                df['employment_status_self_employed'] = 1
+        elif key == 'Insurance Plan':
             df['insurance_plan'] = insurance_plan_encoding.get(value, 1)
-        elif key == 'Age':  # Correct key usage with case sensitivity
+        elif key == 'Age':
             df['age'] = value
-        elif key == 'Number of Dependants':  # Correct key usage with case sensitivity
+        elif key == 'Number of Dependants':
             df['number_of_dependants'] = value
-        elif key == 'Income in Lakhs':  # Correct key usage with case sensitivity
+        elif key == 'Income in Lakhs':
             df['income_lakhs'] = value
-        elif key == "Genetical Risk":
-            df['genetical_risk'] = value
 
     # Calculate 'normalized_risk_score' AFTER assigning 'genetical_risk'
     df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'])
@@ -121,6 +124,7 @@ def preprocess_input(input_dict):
 
 
 def predict(input_dict):
+    print(input_dict)
     input_df = preprocess_input(input_dict)
     if input_dict['Age'] <= 25:
         prediction = model_young.predict(input_df)

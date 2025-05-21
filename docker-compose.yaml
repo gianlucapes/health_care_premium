@@ -1,0 +1,18 @@
+version: '3.8' # Or '3.9', '3.7', etc. - specifies the Compose file format version
+
+services:
+  # Define your Streamlit application service
+  streamlit_app:
+    build:
+      context: ./streamlit_app # Path to the directory containing your Streamlit app and its Dockerfile
+      dockerfile: Dockerfile   # Name of the Dockerfile (defaults to Dockerfile if not specified)
+    ports:
+      - "8501:8501" # Map host port to container port (Streamlit's default port)
+    volumes:
+      - ./streamlit_app:/app # Mount your local app code into the container for live updates (during development)
+    depends_on:
+      # - some_backend_service # Uncomment and add if your Streamlit app depends on another service
+    environment:
+      # - MY_ENV_VAR=my_value # Example environment variable for your app
+      - STREAMLIT_SERVER_PORT=8501 # Explicitly set Streamlit port inside container
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0

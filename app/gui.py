@@ -23,7 +23,9 @@ def main_gui():
             'Thyroid', 'Heart disease', 'High blood pressure & Heart disease', 'Diabetes & Thyroid',
             'Diabetes & Heart disease'
         ],
-        'Insurance Plan': ['Bronze', 'Silver', 'Gold']
+        'Insurance Plan': ['Bronze', 'Silver', 'Gold'],
+        'Stress Level' : ['Medium', 'High', 'Low'],
+        'Physical Activity' : ['Medium', 'Low' , 'High']
     }
 
     # Create four rows of three columns each
@@ -31,6 +33,7 @@ def main_gui():
     row2 = st.columns(3)
     row3 = st.columns(3)
     row4 = st.columns(3)
+    row5 = st.columns(2)
 
     # Assign inputs to the grid
     with row1[0]:
@@ -60,6 +63,10 @@ def main_gui():
         region = st.selectbox('Region', categorical_options['Region'])
     with row4[2]:
         medical_history = st.selectbox('Medical History', categorical_options['Medical History'])
+    with row5[0]:
+        medical_history = st.selectbox('Stress Level', categorical_options['Stress Level'])
+    with row5[1]:
+        medical_history = st.selectbox('Physical Activity', categorical_options['Physical Activity'])
 
     # Create a dictionary for input values
     input_dict = {
