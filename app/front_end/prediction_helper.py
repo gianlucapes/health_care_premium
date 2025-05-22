@@ -32,9 +32,9 @@ def calculate_normalized_risk(medical_history,physical_activities,stress_levels)
     stress_levels=stress_levels.lower().split(" & ")
 
     # Calculate the total risk score by summing the risk scores for each part
-    medical_history_score = sum(risk_scores.get(disease, 0) for disease in diseases)  # Default to 0 if disease not found
-    physical_activity_score=sum(physical_activity_risk.get(physical_activity, 0) for physical_activity in physical_activities)
-    stress_score =sum(physical_activity_risk.get(physical_activity, 0) for physical_activity in physical_activities)
+    medical_history_score   = sum(risk_scores.get(disease, 0) for disease in diseases)  # Default to 0 if disease not found
+    physical_activity_score = sum(physical_activity_risk.get(physical_activity, 0) for physical_activity in physical_activities)
+    stress_score = sum(stress_level_risk.get(stress_level, 0) for stress_level in stress_levels)
 
     combined_total_risk = medical_history_score + physical_activity_score + stress_score
 
