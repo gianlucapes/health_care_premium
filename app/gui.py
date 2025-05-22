@@ -30,7 +30,7 @@ def main_gui():
 
     # Create four rows of three columns each
     row1 = st.columns(3)
-    row2 = st.columns(3)
+    row2 = st.columns(2)
     row3 = st.columns(3)
     row4 = st.columns(3)
     row5 = st.columns(2)
@@ -44,10 +44,8 @@ def main_gui():
         income_lakhs = st.number_input('Income in Lakhs', step=1, min_value=0, max_value=200)
 
     with row2[0]:
-        genetical_risk = st.number_input('Genetical Risk', step=1, min_value=0, max_value=5)
-    with row2[1]:
         insurance_plan = st.selectbox('Insurance Plan', categorical_options['Insurance Plan'])
-    with row2[2]:
+    with row2[1]:
         employment_status = st.selectbox('Employment Status', categorical_options['Employment Status'])
 
     with row3[0]:
@@ -73,7 +71,6 @@ def main_gui():
         'Age': age,
         'Number of Dependants': number_of_dependants,
         'Income in Lakhs': income_lakhs,
-        'Genetical Risk': genetical_risk,
         'Insurance Plan': insurance_plan,
         'Employment Status': employment_status,
         'Gender': gender,
