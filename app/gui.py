@@ -13,7 +13,6 @@ def main_gui():
 
     categorical_options = {
         'Gender': ['Male', 'Female'],
-        'Marital Status': ['Unmarried', 'Married'],
         'BMI Category': ['Normal', 'Obesity', 'Overweight', 'Underweight'],
         'Smoking Status': ['No Smoking', 'Regular', 'Occasional'],
         'Employment Status': ['Salaried', 'Self-Employed', 'Freelancer', ''],
@@ -30,10 +29,9 @@ def main_gui():
 
     # Create four rows of three columns each
     row1 = st.columns(3)
-    row2 = st.columns(2)
+    row2 = st.columns(3)
     row3 = st.columns(3)
     row4 = st.columns(3)
-    row5 = st.columns(2)
 
     # Assign inputs to the grid
     with row1[0]:
@@ -47,23 +45,22 @@ def main_gui():
         insurance_plan = st.selectbox('Insurance Plan', categorical_options['Insurance Plan'])
     with row2[1]:
         employment_status = st.selectbox('Employment Status', categorical_options['Employment Status'])
+    with row2[2]:
+        gender = st.selectbox('Gender', categorical_options['Gender'])
 
     with row3[0]:
-        gender = st.selectbox('Gender', categorical_options['Gender'])
-    with row3[1]:
-        marital_status = st.selectbox('Marital Status', categorical_options['Marital Status'])
-    with row3[2]:
         bmi_category = st.selectbox('BMI Category', categorical_options['BMI Category'])
 
-    with row4[0]:
+    with row3[1]:
         smoking_status = st.selectbox('Smoking Status', categorical_options['Smoking Status'])
-    with row4[1]:
+    with row3[2]:
         region = st.selectbox('Region', categorical_options['Region'])
-    with row4[2]:
+
+    with row4[0]:
         medical_history = st.selectbox('Medical History', categorical_options['Medical History'])
-    with row5[0]:
+    with row4[1]:
         stress_level = st.selectbox('Stress Level', categorical_options['Stress Level'])
-    with row5[1]:
+    with row4[2]:
         physical_activity = st.selectbox('Physical Activity', categorical_options['Physical Activity'])
 
     # Create a dictionary for input values
@@ -74,7 +71,6 @@ def main_gui():
         'Insurance Plan': insurance_plan,
         'Employment Status': employment_status,
         'Gender': gender,
-        'Marital Status': marital_status,
         'BMI Category': bmi_category,
         'Smoking Status': smoking_status,
         'Region': region,
