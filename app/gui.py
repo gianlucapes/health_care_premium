@@ -28,7 +28,7 @@ def main_gui():
     }
 
     # Create four rows of three columns each
-    row1 = st.columns(3)
+    row1 = st.columns(2)
     row2 = st.columns(3)
     row3 = st.columns(3)
     row4 = st.columns(3)
@@ -37,8 +37,6 @@ def main_gui():
     with row1[0]:
         age = st.number_input('Age', min_value=18, step=1, max_value=100)
     with row1[1]:
-        number_of_dependants = st.number_input('Number of Dependants', min_value=0, step=1, max_value=20)
-    with row1[2]:
         income_lakhs = st.number_input('Income in Lakhs', step=1, min_value=0, max_value=200)
 
     with row2[0]:
@@ -66,7 +64,6 @@ def main_gui():
     # Create a dictionary for input values
     input_dict = {
         'Age': age,
-        'Number of Dependants': number_of_dependants,
         'Income in Lakhs': income_lakhs,
         'Insurance Plan': insurance_plan,
         'Employment Status': employment_status,
