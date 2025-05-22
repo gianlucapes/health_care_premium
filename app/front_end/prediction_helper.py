@@ -67,7 +67,6 @@ def handle_scaling(age, df):
 def preprocess_input(input_dict):
     expected_columns = [
         "age",
-        "number_of_dependants",
         "income_lakhs",
         "insurance_plan",
         "normalized_risk_score",
@@ -75,7 +74,6 @@ def preprocess_input(input_dict):
         "region_northwest",           # MUST BE LOWERCASE
         "region_southeast",           # MUST BE LOWERCASE
         "region_southwest",           # MUST BE LOWERCASE
-        "marital_status_unmarried",   # MUST BE LOWERCASE
         "bmi_category_obesity",       # MUST BE LOWERCASE
         "bmi_category_overweight",    # MUST BE LOWERCASE
         "bmi_category_underweight",   # MUST BE LOWERCASE
@@ -103,8 +101,6 @@ def preprocess_input(input_dict):
                 df['region_southeast'] = 1
             elif value == 'Southwest':
                 df['region_southwest'] = 1
-        elif key == 'Marital Status' and value == 'Unmarried':
-            df['marital_status_unmarried'] = 1
         elif key == 'BMI Category':
             # Assign to lowercase columns
             if value == 'Obesity':
@@ -129,8 +125,6 @@ def preprocess_input(input_dict):
             df['insurance_plan'] = insurance_plan_encoding.get(value, 1)
         elif key == 'Age':
             df['age'] = value
-        elif key == 'Number of Dependants':
-            df['number_of_dependants'] = value
         elif key == 'Income in Lakhs':
             df['income_lakhs'] = value
         elif key == 'Physical Activity':
