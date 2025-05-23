@@ -6,7 +6,7 @@ model_young=load("app/artifacts/model_rest.joblib")
 scaler_rest=load("app/artifacts/scaler_rest.joblib")
 scaler_young=load("app/artifacts/scaler_young.joblib")
 
-def calculate_normalized_risk(medical_history,physical_activities,stress_levels):
+def calculate_normalized_risk(medical_history):
     risk_scores = {
         "diabetes": 6,
         "heart disease": 8,
@@ -16,6 +16,24 @@ def calculate_normalized_risk(medical_history,physical_activities,stress_levels)
         "none": 0
     }
 
+    # Split the medical history into potential two parts and convert to lowercase
+    diseases = medical_history.lower().split(" & ")
+
+    # Calculate the total risk score by summing the risk scores for each part
+    medical_history_score = sum(risk_scores.get(disease, 0) for disease in diseases)  # Default to 0 if disease not found
+
+    #combined_total_risk += medical_history_score 
+
+    max_score = 14 # risk score for heart disease (8) + second max risk score (6) for diabetes or high blood pressure
+    min_score = 0  # Since the minimum score is always 0
+
+    # Normalize the total risk score
+    normalized_risk_score = (medical_history_score - min_score) / (max_score - min_score)
+
+    return normalized_risk_score
+
+
+def calculate_normalized_ls_risk(physical_activities,stress_levels):
     physical_activity_risk={
         "high": 0,
         "medium": 1,
@@ -26,25 +44,22 @@ def calculate_normalized_risk(medical_history,physical_activities,stress_levels)
         "medium": 1,
         "low":0
     }
-    # Split the medical history into potential two parts and convert to lowercase
-    diseases = medical_history.lower().split(" & ")
+
     physical_activities=physical_activities.lower().split(" & ")
     stress_levels=stress_levels.lower().split(" & ")
 
-    # Calculate the total risk score by summing the risk scores for each part
-    medical_history_score   = sum(risk_scores.get(disease, 0) for disease in diseases)  # Default to 0 if disease not found
     physical_activity_score = sum(physical_activity_risk.get(physical_activity, 0) for physical_activity in physical_activities)
     stress_score = sum(stress_level_risk.get(stress_level, 0) for stress_level in stress_levels)
 
-    combined_total_risk = medical_history_score + physical_activity_score + stress_score
+    lf_risk=physical_activity_score + stress_score
 
-    max_score = 22 # risk score for heart disease (8) + second max risk score (6) for diabetes or high blood pressure
-    min_score = 0  # Since the minimum score is always 0
+    max_score = 8
+    min_score = 0
 
-    # Normalize the total risk score
-    normalized_risk_score = (combined_total_risk - min_score) / (max_score - min_score)
+    normalized_lf_risk_score = (lf_risk - min_score) / (max_score - min_score)
 
-    return normalized_risk_score
+    return normalized_lf_risk_score
+
 
 def handle_scaling(age, df):
     # scale age and income_lakhs column
@@ -69,6 +84,7 @@ def preprocess_input(input_dict):
         "age",
         "income_lakhs",
         "insurance_plan",
+        "normalized_ls_risk_score",
         "normalized_risk_score",
         "gender_Male",
         "region_northwest",           # MUST BE LOWERCASE
@@ -134,7 +150,8 @@ def preprocess_input(input_dict):
         
 
     # Calculate 'normalized_risk_score' AFTER assigning 'genetical_risk'
-    df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'],input_dict['Physical Activity'],input_dict['Stress Level'])
+    df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'])
+    df['normalized_ls_risk_score'] = calculate_normalized_ls_risk(input_dict['Physical Activity'],input_dict['Stress Level'])
     df.drop(columns=['physical_activity','stress_level'], inplace=True)
     df = handle_scaling(input_dict['Age'], df)
 
